@@ -12,6 +12,9 @@
  * @link		http://codeigniter.com
  * @since		Version 1.0
  * @filesource
+ *
+ * Modified by Kenji Suzuki, 2009/10/31
+ * - Fix $product_name_rules which does not allow Japanese charactors (Thanks to Hajimesawa)
  */
 
 // ------------------------------------------------------------------------
@@ -29,7 +32,7 @@ class CI_Cart {
 
 	// These are the regular expression rules that we use to validate the product ID and product name
 	var $product_id_rules	= '\.a-z0-9_-'; // alpha-numeric, dashes, underscores, or periods
-	var $product_name_rules	= '\.\:\-_ a-z0-9'; // alpha-numeric, dashes, underscores, colons or periods
+	var $product_name_rules	= 'àÍ-ÍûÇü-ÇÒÉ@-ÉîÅ[ÇÅ-ÇöÇ`-ÇyÇO-ÇX\.\:\-_ a-z0-9'; // Japanese, alpha-numeric, dashes, underscores, colons or periods
 
 	// Private variables.  Do not change!
 	var $CI;
@@ -193,7 +196,7 @@ class CI_Cart {
 		// --------------------------------------------------------------------
 
 		// Prep the price.  Remove anything that isn't a number or decimal point.
-		$items['price'] = trim(preg_replace('/([^0-9\.])/i', '', $items['price']));
+		$items['price'] = trim(preg_replace('/([^0-9Å_.])/i', '', $items['price']));
 		// Trim any leading zeros
 		$items['price'] = trim(preg_replace('/(^[0]+)/i', '', $items['price']));
 
@@ -520,7 +523,7 @@ class CI_Cart {
 		}
 
 		// Remove anything that isn't a number or decimal point.
-		$n = trim(preg_replace('/([^0-9\.])/i', '', $n));
+		$n = trim(preg_replace('/([^0-9Å_.])/i', '', $n));
 
 		return number_format($n, 2, '.', ',');
 	}
